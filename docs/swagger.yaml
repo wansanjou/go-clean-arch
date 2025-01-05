@@ -5,6 +5,82 @@ info:
   description: This is a sample server for a PDF API.
   title: PDF API
   version: "1.0"
-paths: {}
+paths:
+  /pdf/compress:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Compress a PDF file
+      parameters:
+      - description: Upload PDF File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully compressed the PDF
+          schema:
+            type: string
+        "400":
+          description: Failed to compress the PDF
+          schema:
+            type: string
+      summary: Compress PDF
+      tags:
+      - PDF
+  /pdf/merge:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Merge multiple PDF files into a single file
+      parameters:
+      - description: PDF Files
+        in: formData
+        name: files
+        required: true
+        type: file
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: Merged PDF
+          schema:
+            type: file
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Merge PDF files
+      tags:
+      - PDF
+  /pdf/split:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Split the provided PDF into multiple pages
+      parameters:
+      - description: PDF File
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: Split PDF
+          schema:
+            type: file
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Split PDF file
+      tags:
+      - PDF
 swagger: "2.0"
-

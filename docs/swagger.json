@@ -8,5 +8,122 @@
     },
     "host": "localhost:9090",
     "basePath": "/",
-    "paths": {}
+    "paths": {
+        "/pdf/compress": {
+            "post": {
+                "description": "Compress a PDF file",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "PDF"
+                ],
+                "summary": "Compress PDF",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "Upload PDF File",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully compressed the PDF",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Failed to compress the PDF",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/pdf/merge": {
+            "post": {
+                "description": "Merge multiple PDF files into a single file",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/pdf"
+                ],
+                "tags": [
+                    "PDF"
+                ],
+                "summary": "Merge PDF files",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "PDF Files",
+                        "name": "files",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Merged PDF",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/pdf/split": {
+            "post": {
+                "description": "Split the provided PDF into multiple pages",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/pdf"
+                ],
+                "tags": [
+                    "PDF"
+                ],
+                "summary": "Split PDF file",
+                "parameters": [
+                    {
+                        "type": "file",
+                        "description": "PDF File",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Split PDF",
+                        "schema": {
+                            "type": "file"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

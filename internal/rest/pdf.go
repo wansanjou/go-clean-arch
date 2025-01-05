@@ -25,45 +25,23 @@ func NewPDFHandler(app *fiber.App, svc PdfService) *PDFHandler {
 		Service: svc,
 	}
 
-	// Compress PDF Endpoint
-	// @Summary Compress PDF
-	// @Description Compress a PDF file
-	// @Tags PDF
-	// @Accept multipart/form-data
-	// @Produce json
-	// @Param file formData file true "Upload PDF File"
-	// @Success 200 {string} string "Successfully compressed the PDF"
-	// @Failure 400 {string} string "Failed to compress the PDF"
-	// @Router /pdf/compress [post]
-	app.Post("/compress", handler.CompressPDF)
-
-	// Merge PDF Endpoint
-	// @Summary Merge PDF files
-	// @Description Merge multiple PDF files into a single file
-	// @Tags PDF
-	// @Accept multipart/form-data
-	// @Produce application/pdf
-	// @Param files formData file true "PDF Files" collectionFormat(multi)
-	// @Success 200 {file} file "Merged PDF"
-	// @Failure 400 {object} fiber.Map "Invalid input"
-	// @Router /pdf/merge [post]
-	app.Post("/merge", handler.MergePDF)
-
-	// Split PDF Endpoint
-	// @Summary Split PDF file
-	// @Description Split the provided PDF into multiple pages
-	// @Tags PDF
-	// @Accept multipart/form-data
-	// @Produce application/pdf
-	// @Param file formData file true "PDF File"
-	// @Success 200 {file} file "Split PDF"
-	// @Failure 400 {object} fiber.Map "Invalid input"
-	// @Router /pdf/split [post]
-	app.Post("/split", handler.SplitPDF)
+	app.Post("/pdf/compress", handler.CompressPDF)
+	app.Post("/pdf/merge", handler.MergePDF)
+	app.Post("/pdf/split", handler.SplitPDF)
 
 	return handler
 }
 
+// Compress PDF Endpoint
+// @Summary Compress PDF
+// @Description Compress a PDF file
+// @Tags PDF
+// @Accept multipart/form-data
+// @Produce json
+// @Param file formData file true "Upload PDF File"
+// @Success 200 {string} string "Successfully compressed the PDF"
+// @Failure 400 {string} string "Failed to compress the PDF"
+// @Router /pdf/compress [post]
 func (h *PDFHandler) CompressPDF(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	if err != nil {
@@ -106,6 +84,16 @@ func (h *PDFHandler) CompressPDF(c *fiber.Ctx) error {
 	return c.SendFile(outputPath)
 }
 
+// Merge PDF Endpoint
+// @Summary Merge PDF files
+// @Description Merge multiple PDF files into a single file
+// @Tags PDF
+// @Accept multipart/form-data
+// @Produce application/pdf
+// @Param files formData file true "PDF Files"
+// @Success 200 {file} file "Merged PDF"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Router /pdf/merge [post]
 func (h *PDFHandler) MergePDF(c *fiber.Ctx) error {
 	form, err := c.MultipartForm()
 	if err != nil {
@@ -154,6 +142,16 @@ func (h *PDFHandler) MergePDF(c *fiber.Ctx) error {
 	return c.SendFile(outputPath)
 }
 
+// Split PDF Endpoint
+// @Summary Split PDF file
+// @Description Split the provided PDF into multiple pages
+// @Tags PDF
+// @Accept multipart/form-data
+// @Produce application/pdf
+// @Param file formData file true "PDF File"
+// @Success 200 {file} file "Split PDF"
+// @Failure 400 {object} map[string]interface{} "Invalid input"
+// @Router /pdf/split [post]
 func (h *PDFHandler) SplitPDF(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	if err != nil {
