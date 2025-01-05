@@ -25,9 +25,41 @@ func NewPDFHandler(app *fiber.App, svc PdfService) *PDFHandler {
 		Service: svc,
 	}
 
-	app.Post("/pdf/compress", handler.CompressPDF)
-	app.Post("/pdf/merge", handler.MergePDF)
-	app.Post("/pdf/split", handler.SplitPDF)
+	// Compress PDF Endpoint
+	// @Summary Compress PDF
+	// @Description Compress a PDF file
+	// @Tags PDF
+	// @Accept multipart/form-data
+	// @Produce json
+	// @Param file formData file true "Upload PDF File"
+	// @Success 200 {string} string "Successfully compressed the PDF"
+	// @Failure 400 {string} string "Failed to compress the PDF"
+	// @Router /pdf/compress [post]
+	app.Post("/compress", handler.CompressPDF)
+
+	// Merge PDF Endpoint
+	// @Summary Merge PDF files
+	// @Description Merge multiple PDF files into a single file
+	// @Tags PDF
+	// @Accept multipart/form-data
+	// @Produce application/pdf
+	// @Param files formData file true "PDF Files" collectionFormat(multi)
+	// @Success 200 {file} file "Merged PDF"
+	// @Failure 400 {object} fiber.Map "Invalid input"
+	// @Router /pdf/merge [post]
+	app.Post("/merge", handler.MergePDF)
+
+	// Split PDF Endpoint
+	// @Summary Split PDF file
+	// @Description Split the provided PDF into multiple pages
+	// @Tags PDF
+	// @Accept multipart/form-data
+	// @Produce application/pdf
+	// @Param file formData file true "PDF File"
+	// @Success 200 {file} file "Split PDF"
+	// @Failure 400 {object} fiber.Map "Invalid input"
+	// @Router /pdf/split [post]
+	app.Post("/split", handler.SplitPDF)
 
 	return handler
 }
