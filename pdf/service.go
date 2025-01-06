@@ -10,6 +10,7 @@ type PdfRepository interface {
 	Compress(inputPath, outputPath string) error
 	Merge(inputPaths []string, outputPath string) error
 	Split(inputPath, outputPath string) error
+	Ocr(inputPath, outputPath string) error
 }
 
 type Service struct {
@@ -30,4 +31,8 @@ func (s *Service) MergePDF(ctx context.Context, req domain.MergePDF) error {
 
 func (s *Service) SplitPDF(ctx context.Context, req domain.SplitPDF) error {
 	return s.pdfRepo.Split(req.FilePath, req.OutputDir)
+}
+
+func (s *Service) OcrPDF(ctx context.Context, inputPath, outputPath string) error {
+	return s.pdfRepo.Ocr(inputPath, outputPath)
 }

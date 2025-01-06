@@ -14,6 +14,7 @@ type PdfService interface {
 	CompressPDF(ctx context.Context, inputPath, outputPath string) error
 	MergePDF(ctx context.Context, req domain.MergePDF) error
 	SplitPDF(ctx context.Context, req domain.SplitPDF) error
+	OcrPDF(ctx context.Context, inputPath, outputPath string) error
 }
 
 type PDFHandler struct {
@@ -192,4 +193,39 @@ func (h *PDFHandler) SplitPDF(c *fiber.Ctx) error {
 	}
 
 	return c.SendFile(files[0])
+}
+
+func (h *PDFHandler) Ocr(c *fiber.Ctx) error {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Failed to get file",
+		})
+	}
+
+	outputDir := "./result"
+	err = os.MkdirAll(outputDir, os.ModePerm)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": fmt.Sprintf("Failed to create output directory: %v", err),
+		})
+	}
+
+	inputPath := filepath.Join(outputDir, file.Filename)
+
+	if err := c.SaveFile(file, inputPath); err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Failed to save file",
+		})
+	}
+	defer os.Remove(inputPath)
+
+	err = h.Service.OcrPDF(c.Context(), inputPath, outputDir)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": fmt.Sprintf("Failed to split PDF: %v", err),
+		})
+	}
+
+	return c.SendFile(outputDir)
 }
